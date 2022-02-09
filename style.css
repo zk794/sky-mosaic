@@ -1,0 +1,24 @@
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#title {
+  font-size: 20px;
+  font-family: sans-serif;
+  text-align: center;
+  padding: 38px;
+}
+
+img {
+  text-align: center;
+}
+
+p {
+  margin: 0;
+}
+
+canvas {
+  padding: 0px;
+}

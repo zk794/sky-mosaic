@@ -7,7 +7,8 @@ const artWidth = Math.floor(document.body.clientWidth * (2/3))
 let gridSize = 5
 let canvWidth = Math.floor(artWidth / gridSize)
 
-async function getImages(url, reps) {
+async function getImages(url, reps, callback) {
+  console.log("callback type ", typeof callback)
   const res = await fetch(url,{
     headers: {
       Authorization: apiToken
@@ -19,19 +20,17 @@ async function getImages(url, reps) {
    nextPage = data.next_page
    console.log(data.next_page)
    console.log(imgArr.length)
-   if (reps > 0) getImages(nextPage, reps-1)
+   if (reps > 0) getImages(nextPage, reps-1, callback)
+   else callback()
 }
 
 function shuffleArr(array) {
   let currentIndex = array.length,  randomIndex;
-
   // While there remain elements to shuffle...
   while (currentIndex != 0) {
-
     // Pick a remaining element...
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
-
     // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [
       array[randomIndex], array[currentIndex]];
@@ -47,6 +46,7 @@ function makeImgGrid(gridSize) {
   while (rows.length < gridSize) { // add row
     let newRow = document.createElement("div")
     newRow.setAttribute("class", "row")
+    newRow.style.height = `${canvWidth}px`
     div.appendChild(newRow)
     rows = document.querySelectorAll("div.row")
   }
@@ -59,12 +59,12 @@ function makeImgGrid(gridSize) {
     while (row.children.length < gridSize) { // add canvases
       let pic = document.createElement("canvas")
       pic.setAttribute("class", "im")
-      pic.setAttribute("width", canvWidth.toString())
-      pic.setAttribute("height", canvWidth.toString())
+      pic.width = canvWidth
+      pic.height = canvWidth
 
       pic.addEventListener('click', function (e) {
-        console.log("click")
-        console.log(this)
+        // console.log("click")
+        // console.log(this)
         let ctx = this.getContext('2d')
         const image = new Image()
         r = Math.floor(Math.random() * imgArr.length)
@@ -99,13 +99,17 @@ function getSkyImg(imgEl, idx) {
 }
 
 
-getImages(nextPage, 1).then(res => {
+// getImages(nextPage, 1)
+// imgArr = shuffleArr(imgArr)
+// makeImgGrid(gridSize)
+// loadInitImages()
+
+getImages(nextPage, 1, () => {
   imgArr = shuffleArr(imgArr)
   makeImgGrid(gridSize)
   loadInitImages()
-  // imgs = document.querySelectorAll("img")
-  // imgs.forEach((im, idx) => getSkyImg(im, idx))
 })
-
-// makeImgGrid(gridSize)
-// modCanvs()
+// console.log(x)
+// x.then(res => {
+//
+// })

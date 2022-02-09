@@ -11,8 +11,8 @@ body {
   padding: 38px;
 }
 
-img {
-  text-align: center;
+div {
+  user-select: none
 }
 
 p {

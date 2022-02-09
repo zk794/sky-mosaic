@@ -61,6 +61,17 @@ function makeImgGrid(gridSize) {
       pic.setAttribute("class", "im")
       pic.setAttribute("width", canvWidth.toString())
       pic.setAttribute("height", canvWidth.toString())
+      pic.addEventListener('click', function (e) {
+        console.log("click")
+        console.log(this)
+        let ctx = this.getContext('2d')
+        const image = new Image()
+        r = Math.floor(Math.random() * imgArr.length)
+        image.setAttribute("src", imgArr[r].src.large)
+        image.onload = function(){
+          ctx.drawImage(image, 0, 0);
+        }
+      })
       col.appendChild(pic)
     }
     while (col.children.length > gridSize) {
@@ -86,7 +97,7 @@ function modCanvs () {
 }
 
 function getSkyImg(imgEl, idx) {
-  imgEl.setAttribute("src", imgArr[idx].src.medium)
+  imgEl.setAttribute("src", imgArr[idx].src.large)
 }
 
 

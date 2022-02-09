@@ -42,25 +42,26 @@ function shuffleArr(array) {
 
 function makeImgGrid(gridSize) {
   const div = document.getElementById("artwork")
-  let cols = document.querySelectorAll("div.row")
-  console.log(`cols.length = ${cols.length}`)
-  while (cols.length < gridSize) {
-    let newCol = document.createElement("div")
-    newCol.setAttribute("class", "row")
-    div.appendChild(newCol)
-    cols = document.querySelectorAll("div.row")
+  let rows = document.querySelectorAll("div.row")
+  console.log(`rows.length = ${rows.length}`)
+  while (rows.length < gridSize) { // add row
+    let newRow = document.createElement("div")
+    newRow.setAttribute("class", "row")
+    div.appendChild(newRow)
+    rows = document.querySelectorAll("div.row")
   }
-  while (cols.length > gridSize) {
+  while (rows.length > gridSize) { // remove row
     div.removeChild(document.querySelector("div.row"))
-    cols = document.querySelectorAll("div.row")
+    rows = document.querySelectorAll("div.row")
   }
-  console.log(`cols.length = ${cols.length}`)
-  cols.forEach(col => {
-    while (col.children.length < gridSize) {
+  console.log(`rows.length = ${rows.length}`)
+  rows.forEach(row => {
+    while (row.children.length < gridSize) { // add canvases
       let pic = document.createElement("canvas")
       pic.setAttribute("class", "im")
       pic.setAttribute("width", canvWidth.toString())
       pic.setAttribute("height", canvWidth.toString())
+
       pic.addEventListener('click', function (e) {
         console.log("click")
         console.log(this)
@@ -72,15 +73,16 @@ function makeImgGrid(gridSize) {
           ctx.drawImage(image, 0, 0);
         }
       })
-      col.appendChild(pic)
+
+      row.appendChild(pic)
     }
-    while (col.children.length > gridSize) {
+    while (row.children.length > gridSize) { // remove canvases
       // remove child
     }
   })
 }
 
-function modCanvs () {
+function loadInitImages () {
   canvs = document.querySelectorAll("canvas")
   canvs.forEach((c, idx) => {
     let ctx = c.getContext('2d')
@@ -89,11 +91,7 @@ function modCanvs () {
     image.onload = function(){
       ctx.drawImage(image, 0, 0);
     }
-
-    // ctx.fillStyle = `rgb(${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)}, ${Math.floor(Math.random()*255)})`
-    // ctx.fillRect(0,0,canvWidth,canvWidth)
   });
-
 }
 
 function getSkyImg(imgEl, idx) {
@@ -104,7 +102,7 @@ function getSkyImg(imgEl, idx) {
 getImages(nextPage, 1).then(res => {
   imgArr = shuffleArr(imgArr)
   makeImgGrid(gridSize)
-  modCanvs()
+  loadInitImages()
   // imgs = document.querySelectorAll("img")
   // imgs.forEach((im, idx) => getSkyImg(im, idx))
 })

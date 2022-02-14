@@ -6,13 +6,18 @@ body {
 
 #title {
   font-size: 20px;
-  font-family: sans-serif;
+  font-family: "Georgia", sans-serif;
   text-align: center;
   padding: 38px;
 }
 
+.artwork {
+  margin: auto;
+  width: 40%;
+}
+
 div {
-  user-select: none
+  user-select: none;
 }
 
 p {

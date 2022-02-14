@@ -3,8 +3,9 @@ let apiToken = "563492ad6f91700001000001b8220346b4294348a2e4b831be1085bc"
 let imgArr = []
 let nextPage = "https://api.pexels.com/v1/search?query=clouds"//&color=red"
 
-const artWidth = Math.floor(document.body.clientWidth * (2/3))
-let gridSize = 5
+const artWidth = Math.floor(document.body.clientWidth * (2/5))
+let gridSize = 10
+const numFetches = Math.ceil(gridSize * gridSize / 15)
 let canvWidth = Math.floor(artWidth / gridSize)
 const imWidth = 940
 const imHeight = 650
@@ -125,7 +126,7 @@ function getSkyImg(imgEl, idx) {
 // makeImgGrid(gridSize)
 // loadInitImages()
 
-getImages(nextPage, 1, () => {
+getImages(nextPage, numFetches, () => {
   imgArr = shuffleArr(imgArr)
   makeImgGrid(gridSize)
   loadInitImages()

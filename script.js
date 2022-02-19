@@ -1,14 +1,22 @@
 
 let apiToken = "563492ad6f91700001000001b8220346b4294348a2e4b831be1085bc"
 let imgArr = []
-let nextPage = "https://api.pexels.com/v1/search?query=clouds"//&color=red"
+let imgArrRed = []
+let imgArrOra = []
+let imgArrYel = []
+let imgArrBlu = []
+let imgArrPur = []
+let imgArrPin = []
+let nextPage = "https://api.pexels.com/v1/search?query=clouds"
 
 const artWidth = Math.floor(document.body.clientWidth * (2/5))
 let gridSize = 10
-const numFetches = Math.ceil(gridSize * gridSize / 15)
+let numFetches = Math.ceil(gridSize * gridSize / 15)
 let canvWidth = Math.floor(artWidth / gridSize)
 const imWidth = 940
 const imHeight = 650
+
+let canvs = []
 
 async function getImages(url, reps, callback) {
   const res = await fetch(url,{
@@ -19,8 +27,50 @@ async function getImages(url, reps, callback) {
    const data = await res.json()
    imgArr = imgArr.concat(data.photos)
    nextPage = data.next_page
-   if (reps > 0) getImages(nextPage, reps-1, callback)
+   if (reps > 1) {
+     // console.log(imgObj)
+     getImages(nextPage, reps-1, callback)
+   }
    else callback()
+}
+
+function hexToHue (hex) {
+  let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    let r = parseInt(result[1], 16);
+    let g = parseInt(result[2], 16);
+    let b = parseInt(result[3], 16);
+
+    r /= 255, g /= 255, b /= 255;
+    let max = Math.max(r, g, b), min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if(max == min){
+        h = s = 0; // achromatic
+    } else {
+        let d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch(max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    s = s*100;
+    s = Math.round(s);
+    l = l*100;
+    l = Math.round(l);
+    h = Math.round(360*h)
+
+    if (h <= 13 || h > 337) return "red"
+    if (h >= 298) return "pink"
+    if (h >= 275) return "purple"
+    if (h >= 170) return "blue"
+    if (h >= 70) return "green"
+    if (h >= 53) return "yellow"
+    return "orange"
 }
 
 function shuffleArr(array) {
@@ -84,6 +134,8 @@ function makeImgGrid(gridSize) {
       // remove child
     }
   })
+
+  canvs = document.querySelectorAll("canvas")
 }
 
 function cropX(canvas) {
@@ -105,7 +157,6 @@ function cropY(canvas) {
 }
 
 function loadInitImages () {
-  canvs = document.querySelectorAll("canvas")
   canvs.forEach((c, idx) => {
     let ctx = c.getContext('2d')
     const image = new Image()
@@ -120,18 +171,30 @@ function getSkyImg(imgEl, idx) {
   imgEl.setAttribute("src", imgArr[idx].src.large)
 }
 
+getImages(nextPage, Math.ceil(gridSize*gridSize/15), () => {
 
-// getImages(nextPage, 1)
-// imgArr = shuffleArr(imgArr)
-// makeImgGrid(gridSize)
-// loadInitImages()
-
-getImages(nextPage, numFetches, () => {
+  // const objJSON = JSON.stringify(imgObj);
+  // localStorage.setItem("imgs", objJSON);
+  console.log(imgArr)
   imgArr = shuffleArr(imgArr)
   makeImgGrid(gridSize)
   loadInitImages()
+
+  setInterval(() => {
+    canvs.forEach((c, idx) => {
+      const x = Math.random()
+      if (x <= 0.33) {
+        let ctx = c.getContext('2d')
+        const image = new Image()
+        r = Math.floor(Math.random() * imgArr.length)
+        image.setAttribute("src", imgArr[r].src.large)
+        image.onload = function(){
+          const xDraw = Math.random() * canvWidth*5/4 - (canvWidth/2)
+          const yDraw = Math.random() * canvWidth*5/4 - (canvWidth/2)
+          ctx.drawImage(image, cropX(c), cropY(c),
+            canvWidth, canvWidth, xDraw, yDraw, canvWidth, canvWidth,);
+        }
+      }
+    });
+  }, 3000);
 })
-// console.log(x)
-// x.then(res => {
-//
-// })

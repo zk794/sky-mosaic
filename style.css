@@ -2,13 +2,26 @@
 body {
   margin: 0;
   padding: 0;
+  background: url('https://t3.ftcdn.net/jpg/00/61/58/76/360_F_61587607_DtJjvh0zLzgpjWBg9WbZQk2ywdIly4i1.jpg');
+  /* background-repeat: no-repeat; */
+  /* background-size: 100% 100%; */
+  background-color: #EEEEEE;
 }
 
 #title {
-  font-size: 20px;
+  margin: auto;
+  padding: 0px;
+  color: #888888;
+  font-size: 40px;
+  font-weight: bold;
   font-family: "Georgia", sans-serif;
+  font-style: italic;
   text-align: center;
   padding: 38px;
+}
+
+#title:hover {
+  color: #555555;
 }
 
 .artwork {
